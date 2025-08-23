@@ -27,6 +27,9 @@ const clothingItemSchema = new mongoose.Schema({
 
   owner: {
     //TODO: Add a link to the item author's model of the ObjectId type, a required field
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    required: true,
   },
 
   likes: {

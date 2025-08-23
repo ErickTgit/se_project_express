@@ -1,16 +1,21 @@
 const User = require("../models/user");
+const {
+  errorInvalid,
+  errorNotFound,
+  errorDefault,
+} = require("../utils/errors");
 
-// GET /users
-
+// Gets all Users
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.status(200).send(users))
     .catch((err) => {
       console.error(err);
-      return res.status(500).send({ message: err.message });
+      return res.status(errorDefault).send({ message: err.message });
     });
 };
 
+// Posts a new user
 const createUser = (req, res) => {
   const { name, avatar } = req.body;
 
@@ -21,12 +26,13 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(errorInvalid).send({ message: err.message });
       }
-      return res.status(500).send({ message: err.message });
+      return res.status(errorDefault).send({ message: err.message });
     });
 };
 
+// Gets user by ID
 const getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
@@ -37,11 +43,11 @@ const getUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: err.message });
+        return res.status(errorNotFound).send({ message: err.message });
       } else if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(errorInvalid).send({ message: err.message });
       }
-      return res.status(500).send({ message: err.message });
+      return res.status(errorDefault).send({ message: err.message });
     });
 };
 

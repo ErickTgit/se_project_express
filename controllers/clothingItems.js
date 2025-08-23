@@ -1,19 +1,33 @@
 const ClothingItem = require("../models/clothingItem");
+const {
+  errorInvalid,
+  errorNotFound,
+  errorDefault,
+} = require("../utils/errors");
 
+// Posts new Clothing Item
 const createItem = (req, res) => {
-  console.log(req);
-  console.log(req.body);
+  const { name, weather, imageUrl, ownerId } = req.body;
 
-  const { name, weather, imageUrl } = req.body;
+  ClothingItem.create({ name, weather, imageUrl, owner: ownerId })
 
-  ClothingItem.create({ name, weather, imageUrl })
     .then((item) => {
-      console.log(item);
       res.send({ data: item });
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res.status(400).send({ message: err.message });
     });
 };
 
-module.exports = { createItem };
+// Gets All ClothingItems
+const getItems = (req, res) => {
+  ClothingItem.find({})
+    .then((items) => {
+      res.status(200).send(items);
+    })
+    .catch((err) => {
+      res.status(errorDefault).send({ message: err.message });
+    });
+};
+
+module.exports = { createItem, getItems };
