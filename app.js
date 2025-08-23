@@ -1,6 +1,6 @@
 const express = require("express");
 const { default: mongoose } = require("mongoose");
-const indexRouter = require("./routes/users.js");
+const indexRouter = require("./routes/index");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -11,8 +11,11 @@ mongoose
   .then(() => {
     console.log("Connected to DB");
   })
-  .catch(console.error);
+  .catch((err) => {
+    console.error(err);
+  });
 
+app.use(express.json());
 app.use("/", indexRouter);
 
 app.listen(PORT, () => {
