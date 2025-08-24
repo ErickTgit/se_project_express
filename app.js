@@ -15,6 +15,14 @@ mongoose
     console.error(err);
   });
 
+// temporary auth middleware
+app.use((req, res, next) => {
+  req.user = {
+    _id: "5d8b8592978f8bd833ca8133", // <-- use your test user _id
+  };
+  next();
+});
+
 app.use(express.json());
 app.use("/", indexRouter);
 
