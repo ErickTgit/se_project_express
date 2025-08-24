@@ -10,22 +10,25 @@ const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
 
   ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
-    .then((item) => {
-      res.send({ data: item });
-    })
+    .then((item) => res.send({ data: item }))
     .catch((err) => {
-      return res.status(errorInvalid).send({ message: err.message });
+      if (err.name === "ValidationError" || err.name === "CastError") {
+        return res.status(errorInvalid).send({ message: "Invalid data" });
+      }
+      return res
+        .status(errorDefault)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
 // Gets All ClothingItems
 const getItems = (req, res) => {
   ClothingItem.find({})
-    .then((items) => {
-      res.status(200).send(items);
-    })
-    .catch((err) => {
-      return res.status(errorDefault).send({ message: err.message });
+    .then((items) => res.status(200).send(items))
+    .catch(() => {
+      return res
+        .status(errorDefault)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 // Deletes Clothing Items by ID
@@ -34,14 +37,15 @@ const deleteItem = (req, res) => {
     .orFail()
     .then((item) => res.send(item))
     .catch((err) => {
-      console.log(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(errorNotFound).send({ message: err.message });
-      } else if (err.name === "CastError") {
-        return res.status(errorInvalid).send({ message: err.message });
+        return res.status(errorNotFound).send({ message: "Item not found" });
       }
-
-      return res.status(errorDefault).send({ message: err.message });
+      if (err.name === "CastError") {
+        return res.status(errorInvalid).send({ message: "Invalid item id" });
+      }
+      return res
+        .status(errorDefault)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
