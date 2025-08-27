@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { errorNotFound } = require("../controllers/clothingItems");
 
 const userRouter = require("./users");
 const clothingRouter = require("./clothingItems");

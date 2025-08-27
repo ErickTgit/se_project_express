@@ -26,5 +26,7 @@ module.exports = {
     "no-underscore-dangle": "off",
     //  Removes warning for console.error but keeps the warning for console.log
     "no-console": ["warn", { allow: ["error"] }],
+    // Allows Comments
+    "spaced-comment": "off",
   },
 };

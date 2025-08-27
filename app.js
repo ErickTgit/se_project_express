@@ -26,10 +26,6 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use("/", indexRouter);
 
-app.use("*", (req, res) => {
-  res.status(errorNotFound).send({ message: "Requested resource not found" });
-});
-
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
